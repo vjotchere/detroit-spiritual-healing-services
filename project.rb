@@ -7,15 +7,34 @@ prompt = TTY::Prompt.new
 # service_provider_name = prompt.ask('Service provider name:')
 
 class Organization
-    # services = []
-    sps = []
 
-    def initialize(services)
-        @services = services
+    @name
+    @services
+    @service_providers
+
+    def initialize(name)
+        @services = Array.new
+        @sps = Array.new
+        @name = name
+        puts "The #{name} organization has been created!"
+    end
+
+    def add_service(service)
+        @services.push(service)
+    end
+
+    def list_services()
+        puts "The offered services are:\n"
+        i = 0
+        while i < @services.length
+            service = @services[i]
+            puts "\t#{service}" 
+            i += 1
+        end
     end
 
     def remove_service(service)
-        services.delete(service)
+        @services.delete(service)
     end
 
     def schedule_appointment(time, service, service_provider, client, isRecurring)
@@ -57,7 +76,7 @@ class Service
     end       
 end
 
-class Service_Provider
+class ServiceProvider
     def initialize(name, number, services)
         @name = name
         @number = number
@@ -78,14 +97,14 @@ class Service_Provider
     end
 end
 
-class Date_Time
+class DateTime
     def initialize(start_time, recurring)
         @start_time = start_time
         @recurring = recurring
     end
 end
 
-org = Organization.new(['massage', 'hotstone'])
-tati = Service_Provider.new('tati',1,['massage'])
-org.schedule_appointment(1,'massage', tati,'client',true)
-puts tati.print_appts
+# org = Organization.new(['massage', 'hotstone'])
+# tati = ServiceProvider.new('tati',1,['massage'])
+# org.schedule_appointment(1,'massage', tati,'client',true)
+# puts tati.print_appts
