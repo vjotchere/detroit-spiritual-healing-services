@@ -1,33 +1,28 @@
 require 'tty-prompt'
 
-prompt = TTY::Prompt.new
-
-# date                  = prompt.ask('Date:')
-# start_time            = prompt.ask('Start time:')
-# service_provider_name = prompt.ask('Service provider name:')
-
 class Organization
 
     @name
     @services
     @service_providers
 
-    def initialize(name)
+    def initialize(prompt)
         @services = Array.new
         @sps = Array.new
     
-        # @name = prompt.ask("Name of the organization: ")
-        @name = name
-        puts "The #{name} organization has been created!"
+        @name = prompt.ask("Name of the organization: ")
+        # @name = name
+        puts "\nThe #{@name} organization has been created!\n"
 
         puts "Welcome! Use the following commands:\n\n"
         puts (Organization.public_instance_methods - Object.public_instance_methods).sort.join("\n")
         puts ("\n")
     end
 
-    def add_service(service)
-        # @service = prompt.ask("Name of the service: ")
-        @services.push(service)
+    def add_service()
+        prompt = TTY::Prompt.new
+        @service = prompt.ask("Name the service: ")
+        @services.push(@service)
     end
 
     def list_services()
@@ -111,6 +106,27 @@ class DateTime
         @recurring = recurring
     end
 end
+
+prompt = TTY::Prompt.new
+org = Organization.new(prompt)
+response = prompt.ask("Enter a command (use 'close' to exit): ")
+while (response != "close".downcase)
+    case response
+    when "add_service"
+        org.add_service()
+    else
+        "Invalid command"
+    end
+
+    response = prompt.ask("Enter a command: ")
+end
+
+# .each to cycle through an array
+
+# presidents.each do |president|
+#     puts president.upcase
+# end
+
 
 # org = Organization.new(['massage', 'hotstone'])
 # tati = ServiceProvider.new('tati',1,['massage'])
