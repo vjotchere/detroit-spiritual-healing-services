@@ -15,11 +15,18 @@ class Organization
     def initialize(name)
         @services = Array.new
         @sps = Array.new
+    
+        # @name = prompt.ask("Name of the organization: ")
         @name = name
         puts "The #{name} organization has been created!"
+
+        puts "Welcome! Use the following commands:\n\n"
+        puts (Organization.public_instance_methods - Object.public_instance_methods).sort.join("\n")
+        puts ("\n")
     end
 
     def add_service(service)
+        # @service = prompt.ask("Name of the service: ")
         @services.push(service)
     end
 
@@ -34,6 +41,7 @@ class Organization
     end
 
     def remove_service(service)
+        # @service = prompt.ask("Name of service to delete: ")
         @services.delete(service)
     end
 
