@@ -1,4 +1,6 @@
 class ServiceProvider
+    attr_reader :name, :number, :services, :appointments
+
     def initialize(name, number, services)
         @name = name
         @number = number
@@ -6,19 +8,19 @@ class ServiceProvider
         @appointments = []
     end
 
-    def timeslot_is_available?(newTime, newDuration, isRecurring)
+    def timeslot_is_available?(new_time, new_duration, is_recurring)
       @appointments.each do |appointment|
-        existingTime = appointment.get_time
-        if(existingTime.wday == newTime.wday)
-          if(hours_overlap?(existingTime, appointment.get_service.get_duration(), newTime, newDuration))
-            if(is_same_date(existingTime, newTime))
+        existing_time = appointment.get_time
+        if(existing_time.wday == new_time.wday)
+          if(hours_overlap?(existing_time, appointment.get_service.get_duration(), new_time, new_duration))
+            if(is_same_date(existing_time, new_time))
               return false
             else
-              if(appointment.get_isRecurring && isRecurring)
+              if(appointment.get_is_recurring && is_recurring)
                 return false
-              elsif(newTime < existingTime && isRecurring)
+              elsif(new_time < existing_time && is_recurring)
                 return false
-              elsif(existingTime < newTime && appointment.get_isRecurring)
+              elsif(existing_time < new_time && appointment.get_is_recurring)
                 return false
               end
             end
@@ -28,20 +30,16 @@ class ServiceProvider
       return true
     end
 
-    def get_name
-      @name
-    end
-
-    def hours_overlap?(time1, time1Duration, time2, time2Duration)
-      if(time1 < time2)
-        return !(time1 + time1Duration.to_i > time2)
+    def hours_overlap?(time_1, time_1_duration, time_2, time_2_duration)
+      if(time_1 < time_2)
+        return !(time_1 + time_1_duration.to_i > time_2)
       else
-        return !(time2 + time2Duration.to_i > time1)
+        return !(time_2 + time_2_duration.to_i > time_1)
       end
     end
 
-    def is_same_date?(time1, time2)
-      return (time1.day == time2.day && time1.month == time2.month && time1.year == time2.year)
+    def is_same_date?(time_1, time_2)
+      return (time_1.day == time_2.day && time_1.month == time_2.month && time_1.year == time_2.year)
     end
 
     def add_service(service)
@@ -50,13 +48,5 @@ class ServiceProvider
 
     def add_appt(appt)
         @appointments.push(appt)
-    end
-
-    def print_appts
-        puts @appointments[0].get_time
-    end
-
-    def get_services
-      @services
     end
 end

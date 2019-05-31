@@ -1,20 +1,10 @@
 class Appointment
-    def initialize(time, service, client, isRecurring)
+    attr_reader :time, :service, :clinet, :is_recurring
+
+    def initialize(time, service, client, is_recurring)
         @time = time
         @service = service
         @client = client
-        @isRecurring = isRecurring
-    end
-
-    def get_time
-        @time
-    end
-
-    def get_service
-      @service
-    end
-
-    def get_isRecurring
-      @isRecurring
+        @is_recurring = is_recurring
     end
 end
