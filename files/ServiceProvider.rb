@@ -49,8 +49,4 @@ class ServiceProvider
     def add_appt(appt)
         @appointments.push(appt)
     end
-
-    def print_appts
-        puts @appointments[0].get_time
-    end
 end
