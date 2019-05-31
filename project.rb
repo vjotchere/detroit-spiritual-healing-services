@@ -123,24 +123,49 @@ class Organization
 
     def schedule_appointment()
       prompt = TTY::Prompt.new
-      serviceName = prompt.ask("Name of the service: ")
 
-      if(!serviceAlreadyExists?(serviceName))
+      serviceProviderName = prompt.ask("Name of the service provider: ")
+      serviceProvider = getServiceProviderByName(serviceProviderName)
+
+      if(serviceProvider == nil)
+        puts "Service provider does not exist"
+        return
+      end
+
+      serviceName = prompt.ask("Name of the service: ")
+      service = getServiceByName(serviceName)
+
+      if(service == nil)
         puts "Service does not exist"
         return
       end
+
+      if(!serviceProviderProvidesService?(serviceProviderName, serviceName))
+        puts "#{serviceProviderName} does not provide #{serviceName}"
+        return
+      end
+
       day = prompt.ask("Date of appointment: ")
       month = prompt.ask("Month of appointment: ")
       year = prompt.ask("Year of appointment: ")
-      time = prompt.ask("Start time of appointment (in 24 hour time): ")
-    end
+      startHour, startMinute = getTimeResponse()
 
-    def schedule_appointment(time, service, service_provider, client, isRecurring)
-        appt = Appointment.new(time, service, client, isRecurring)
-        #do stuff to figure out if this can be scheduled or not
-        if(service_provider.timeslot_is_available(time, service.get_duration(), isRecurring))
-          service_provider.add_appt(appt)
-        end
+      if(startHour == nil || startMinute == nil)
+        puts "Invalid Time"
+        return
+      end
+
+      appointmentTime = Time.new(year, month, day, startHour, startMinute)
+      isRecurring = getRecurringResponse()
+      client = prompt.ask("Client name: ")
+
+      if(serviceProvider.timeslot_is_available?(appointmentTime, service.get_duration(), isRecurring))
+        appt = Appointment.new(appointmentTime, service, client, isRecurring)
+        serviceProvider.add_appt(appt)
+        puts "appointment added successfully"
+      else
+        puts "cant add to that time"
+      end
     end
 
     def view_schedule(service_provider, day)
@@ -179,6 +204,72 @@ class Organization
       return false
     end
 
+    def serviceProviderProvidesService?(serviceProviderName, serviceName)
+      @service_providers.each do |serviceProvider|
+        if(serviceProvider.get_name == serviceProviderName)
+          serviceProvider.get_services.each do |service|
+            if(service.get_name == serviceName)
+              return true
+            end
+          end
+          return false
+        end
+      end
+      return false
+    end
+
+    def getServiceByName(serviceName)
+      @services.each do |service|
+        if(service.get_name == serviceName)
+          return service
+        end
+      end
+      return nil
+    end
+
+    def getServiceProviderByName(serviceProviderName)
+      @service_providers.each do |serviceProvider|
+        if(serviceProvider.get_name == serviceProviderName)
+          return serviceProvider
+        end
+      end
+      return nil
+    end
+
+    def getRecurringResponse()
+      prompt = TTY::Prompt.new
+      isRecurringResponse = prompt.ask("Appointment recurs weekly? (y/n): ")
+
+      while(isRecurringResponse != 'y' && isRecurringResponse != 'n')
+        puts "Invalid response (must enter 'y' or 'n')"
+        isRecurringResponse = prompt.ask("Appointment recurs weekly? (y/n): ")
+      end
+
+      return isRecurringResponse == 'y'
+    end
+
+    def getTimeResponse()
+      prompt = TTY::Prompt.new
+      timeString = prompt.ask("Time of appointment (ex. '14:45'): ")
+      timeStringArray = timeString.split(':')
+
+      if(timeStringArray.length != 2)
+        return nil, nil
+      end
+
+      hour = timeStringArray[0].to_i
+      minute = timeStringArray[1].to_i
+
+      if(hour < 0 || hour > 23)
+        hour = nil
+      end
+
+      if(minute < 0 || minute > 59)
+        minute = nil
+      end
+
+      return hour, minute
+    end
 end
 
 
@@ -231,7 +322,7 @@ class ServiceProvider
       @appointments.each do |appointment|
         existingTime = appointment.get_time
         if(existingTime.wday == newTime.wday)
-          if(hours_overlap(existingTime, appointment.get_duration, newTime, newDuration))
+          if(hours_overlap?(existingTime, appointment.get_service.get_duration(), newTime, newDuration))
             if(is_same_date(existingTime, newTime))
               return false
             else
@@ -255,9 +346,9 @@ class ServiceProvider
 
     def hours_overlap?(time1, time1Duration, time2, time2Duration)
       if(time1 < time2)
-        return !(time1 + time1Duration > time2)
+        return !(time1 + time1Duration.to_i > time2)
       else
-        return !(time2 + time2Duration > time1)
+        return !(time2 + time2Duration.to_i > time1)
       end
     end
 
@@ -275,6 +366,10 @@ class ServiceProvider
 
     def print_appts
         puts @appointments[0].get_time
+    end
+
+    def get_services
+      @services
     end
 end
 
@@ -302,6 +397,8 @@ while (response != "close".downcase)
         org.remove_service_provider()
     when "list_service_providers"
         org.list_service_providers()
+    when "schedule_appointment"
+        org.schedule_appointment()
     else
         puts "\nInvalid command!\n"
         org.list_commands()
