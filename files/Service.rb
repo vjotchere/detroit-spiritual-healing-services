@@ -1,15 +1,9 @@
 class Service
-    def initialize(name, price, length)
+    attr_reader :name, :price, :duration
+
+    def initialize(name, price, duration)
         @name = name
         @price = price
-        @length = length
-    end
-
-    def get_name()
-      @name
-    end
-
-    def get_duration()
-      @length
+        @duration = duration
     end
 end
