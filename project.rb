@@ -29,5 +29,5 @@ while (response != "close".downcase)
         org.list_commands()
     end
 
-    response = prompt.ask("Enter a command: ")
+    response = prompt.ask("Enter a command (use 'close' to exit): ")
 end
