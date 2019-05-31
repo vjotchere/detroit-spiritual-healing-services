@@ -10,17 +10,17 @@ class ServiceProvider
 
     def timeslot_is_available?(new_time, new_duration, is_recurring)
       @appointments.each do |appointment|
-        existing_time = appointment.get_time
+        existing_time = appointment.time
         if(existing_time.wday == new_time.wday)
-          if(hours_overlap?(existing_time, appointment.get_service.get_duration(), new_time, new_duration))
+          if(hours_overlap?(existing_time, appointment.service.duration(), new_time, new_duration))
             if(is_same_date(existing_time, new_time))
               return false
             else
-              if(appointment.get_is_recurring && is_recurring)
+              if(appointment.is_recurring && is_recurring)
                 return false
               elsif(new_time < existing_time && is_recurring)
                 return false
-              elsif(existing_time < new_time && appointment.get_is_recurring)
+              elsif(existing_time < new_time && appointment.is_recurring)
                 return false
               end
             end
