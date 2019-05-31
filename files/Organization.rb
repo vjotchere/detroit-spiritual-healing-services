@@ -10,6 +10,15 @@ class Organization
         @services = Array.new
         @service_providers = Array.new
 
+        service = Service.new('1', 10, 1)
+        @services.push(service)
+        service_provider = ServiceProvider.new('1', 1, [service])
+        @service_providers.push(service_provider)
+
+        time = Time.new(2019, 1, 1, 13, 30)
+        appt = Appointment.new(time, service, 'me', true)
+        service_provider.add_appt(appt)
+
         @name = prompt.ask("Name of the organization: ")
         # @name = name
         puts "\nThe #{@name} organization has been created!\n"
@@ -27,7 +36,7 @@ class Organization
         end
 
         service_price = prompt.ask("Price of the service: ")
-        service_duration = prompt.ask("Duration of the service: ")
+        service_duration = prompt.ask("Duration of the service (in hours): ")
 
         @services.push(Service.new(service_name, service_price, service_duration))
         puts "The #{service_name} service has been created!"
@@ -168,14 +177,48 @@ class Organization
       end
     end
 
-    def view_schedule(service_provider, day)
-        hits = []
-        #for appt in service_provider.appointments do
-            #if that appt is on the given day
-                #hits.push(appt)
-        #calculate_available_times(hits)
-        # puts all appointments
-        # puts all the available times
+    def list_appointments()
+      prompt = TTY::Prompt.new
+      service_provider_name = prompt.ask("Name of the service provider: ")
+      service_provider = get_service_provider_by_name(service_provider_name)
+
+      if(service_provider == nil)
+        puts "Service provider does not exist"
+        return
+      end
+
+      service_provider.appointments.each do |appointment|
+        appointment.output_appointment
+      end
+    end
+
+    def view_schedule()
+      prompt = TTY::Prompt.new
+      service_provider_name = prompt.ask("Name of the service provider: ")
+      service_provider = get_service_provider_by_name(service_provider_name)
+
+      if(service_provider == nil)
+        puts "Service provider does not exist"
+        return
+      end
+
+      day = prompt.ask("Date of appointment: ")
+      month = prompt.ask("Month of appointment: ")
+      year = prompt.ask("Year of appointment: ")
+
+      time = Time.new(year, month, day)
+
+      service_provider.appointments.each do |appointment|
+        if(appointment.is_recurring)
+          if(time.wday == appointment.time.wday)
+            appointment.output_appointment
+          end
+        else
+          if(ServiceProvider.is_same_date?(time, appointment.time))
+            appointment.output_appointment
+          end
+        end
+      end
     end
 
     private

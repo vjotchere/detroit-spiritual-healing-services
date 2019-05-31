@@ -7,4 +7,8 @@ class Appointment
         @client = client
         @is_recurring = is_recurring
     end
+
+    def output_appointment
+      puts "#{@time.inspect} #{@service.name} #{@client} #{@is_recurring}"
+    end
 end

@@ -5,8 +5,10 @@ require_relative "files/Organization"
 require_relative "files/Service"
 require_relative "files/ServiceProvider"
 
+
 prompt = TTY::Prompt.new
 org = Organization.new(prompt)
+
 response = prompt.ask("Enter a command (use 'close' to exit): ")
 while (response != "close".downcase)
     case response.downcase
@@ -24,6 +26,10 @@ while (response != "close".downcase)
         org.list_service_providers()
     when "schedule_appointment"
         org.schedule_appointment()
+    when "list_appointments"
+        org.list_appointments()
+    when "view_schedule"
+        org.view_schedule()
     else
         puts "\nInvalid command!\n"
         org.list_commands()
