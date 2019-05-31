@@ -19,33 +19,33 @@ class Organization
 
     def add_service()
         prompt = TTY::Prompt.new
-        serviceName = prompt.ask("Name of the service: ")
+        service_name = prompt.ask("Name of the service: ")
 
-        if(serviceAlreadyExists?(serviceName))
+        if(service_already_exists?(service_name))
           puts "Service Already Exists"
           return
         end
 
-        servicePrice = prompt.ask("Price of the service: ")
-        serviceDuration = prompt.ask("Duration of the service: ")
+        service_price = prompt.ask("Price of the service: ")
+        service_duration = prompt.ask("Duration of the service: ")
 
-        @services.push(Service.new(serviceName, servicePrice, serviceDuration))
-        puts "The #{serviceName} service has been created!"
+        @services.push(Service.new(service_name, service_price, service_duration))
+        puts "The #{service_name} service has been created!"
     end
 
     def remove_service()
         prompt = TTY::Prompt.new
-        serviceToDeleteName = prompt.ask("Name of service to delete: ")
+        service_to_delete_name = prompt.ask("Name of service to delete: ")
 
-        @services.each do |existingService|
-          if(existingService.get_name() == serviceToDeleteName)
-            @services.delete(existingService)
-            puts "The #{serviceToDeleteName} service has been deleted"
+        @services.each do |existing_service|
+          if(existing_service.get_name() == service_to_delete_name)
+            @services.delete(existing_service)
+            puts "The #{service_to_delete_name} service has been deleted"
             return
           end
         end
 
-        puts "The #{@serviceToDeleteName} service does not exist!"
+        puts "The #{@service_to_delete_name} service does not exist!"
     end
 
     def list_services()
@@ -55,8 +55,8 @@ class Organization
             puts "The offered services are:\n"
             i = 0
             while i < @services.length
-                serviceName = @services[i].get_name
-                puts "\t#{serviceName}"
+                service_name = @services[i].get_name
+                puts "\t#{service_name}"
                 i += 1
             end
         end
@@ -64,43 +64,43 @@ class Organization
 
     def add_service_provider()
       prompt = TTY::Prompt.new
-      serviceProviderName = prompt.ask("Name of the service provider: ")
+      service_provider_name = prompt.ask("Name of the service provider: ")
 
-      if(serviceProviderAlreadyExists?(serviceProviderName))
+      if(service_provider_already_exists?(service_provider_name))
         puts "Service Provider already exists"
         return
       end
 
-      serviceProviderNumber = prompt.ask("Service provider phone number: ")
-      availableServiceNamesString = prompt.ask("List of available services (separated by ','): ")
-      availableServiceNamesArray = availableServiceNamesString.split(', ')
-      availableServices = Array.new
+      service_provider_number = prompt.ask("Service provider phone number: ")
+      available_service_names_string = prompt.ask("List of available services (separated by ','): ")
+      available_service_names_array = available_service_names_string.split(', ')
+      available_services = Array.new
 
-      availableServiceNamesArray.each do |serviceName|
-        if(!serviceAlreadyExists?(serviceName))
-          puts "#{serviceName} does not exist"
+      available_service_names_array.each do |service_name|
+        if(!service_already_exists?(service_name))
+          puts "#{service_name} does not exist"
           return
         end
 
         @services.each do |service|
-          if(service.get_name == serviceName)
-            availableServices.push(service)
+          if(service.get_name == service_name)
+            available_services.push(service)
             break
           end
         end
       end
 
-      @service_providers.push(ServiceProvider.new(serviceProviderName, serviceProviderNumber, availableServices))
-      puts "The #{serviceProviderName} service provider has been created!"
+      @service_providers.push(ServiceProvider.new(service_provider_name, service_provider_number, available_services))
+      puts "The #{service_provider_name} service provider has been created!"
     end
 
     def remove_service_provider()
       prompt = TTY::Prompt.new
-      serviceProviderName = prompt.ask("Name of the service provider to delete: ")
+      service_provider_name = prompt.ask("Name of the service provider to delete: ")
       @service_providers.each do |provider|
-        if(provider.get_name == serviceProviderName)
+        if(provider.get_name == service_provider_name)
           @service_providers.delete(provider)
-          puts "Service Provider #{serviceProviderName} has been deleted"
+          puts "Service Provider #{service_provider_name} has been deleted"
           return
         end
       end
@@ -114,8 +114,8 @@ class Organization
           puts "The service providers are:\n"
           i = 0
           while i < @service_providers.length
-              serviceProviderName = @service_providers[i].get_name
-              puts "\t#{serviceProviderName}"
+              service_provider_name = @service_providers[i].get_name
+              puts "\t#{service_provider_name}"
               i += 1
           end
       end
@@ -124,44 +124,44 @@ class Organization
     def schedule_appointment()
       prompt = TTY::Prompt.new
 
-      serviceProviderName = prompt.ask("Name of the service provider: ")
-      serviceProvider = getServiceProviderByName(serviceProviderName)
+      service_provider_name = prompt.ask("Name of the service provider: ")
+      service_provider = get_service_provider_by_name(service_provider_name)
 
-      if(serviceProvider == nil)
+      if(service_provider == nil)
         puts "Service provider does not exist"
         return
       end
 
-      serviceName = prompt.ask("Name of the service: ")
-      service = getServiceByName(serviceName)
+      service_name = prompt.ask("Name of the service: ")
+      service = get_service_by_name(service_name)
 
       if(service == nil)
         puts "Service does not exist"
         return
       end
 
-      if(!serviceProviderProvidesService?(serviceProviderName, serviceName))
-        puts "#{serviceProviderName} does not provide #{serviceName}"
+      if(!service_provider_provides_service?(service_provider_name, service_name))
+        puts "#{service_provider_name} does not provide #{service_name}"
         return
       end
 
       day = prompt.ask("Date of appointment: ")
       month = prompt.ask("Month of appointment: ")
       year = prompt.ask("Year of appointment: ")
-      startHour, startMinute = getTimeResponse()
+      start_hour, start_minute = get_time_response()
 
-      if(startHour == nil || startMinute == nil)
+      if(start_hour == nil || start_minute == nil)
         puts "Invalid Time"
         return
       end
 
-      appointmentTime = Time.new(year, month, day, startHour, startMinute)
-      isRecurring = getRecurringResponse()
+      appointment_time = Time.new(year, month, day, start_hour, start_minute)
+      is_recurring = get_recurring_response()
       client = prompt.ask("Client name: ")
 
-      if(serviceProvider.timeslot_is_available?(appointmentTime, service.get_duration(), isRecurring))
-        appt = Appointment.new(appointmentTime, service, client, isRecurring)
-        serviceProvider.add_appt(appt)
+      if(service_provider.timeslot_is_available?(appointment_time, service.get_duration(), is_recurring))
+        appt = Appointment.new(appointment_time, service, client, is_recurring)
+        service_provider.add_appt(appt)
         puts "appointment added successfully"
       else
         puts "cant add to that time"
@@ -186,29 +186,29 @@ class Organization
         puts ("\n")
     end
 
-    def serviceAlreadyExists?(newServiceName)
-      @services.each do |existingService|
-        if(existingService.get_name() == newServiceName)
+    def service_already_exists?(new_service_name)
+      @services.each do |existing_service|
+        if(existing_service.get_name() == new_service_name)
           return true
         end
       end
       false
     end
 
-    def serviceProviderAlreadyExists?(newServiceProviderName)
-      @service_providers.each do |existingServiceProvider|
-        if(existingServiceProvider.get_name == newServiceProviderName)
+    def service_provider_already_exists?(new_service_provider_name)
+      @service_providers.each do |existing_service_provider|
+        if(existing_service_provider.get_name == new_service_provider_name)
           return true
         end
       end
       return false
     end
 
-    def serviceProviderProvidesService?(serviceProviderName, serviceName)
-      @service_providers.each do |serviceProvider|
-        if(serviceProvider.get_name == serviceProviderName)
-          serviceProvider.get_services.each do |service|
-            if(service.get_name == serviceName)
+    def service_provider_provides_service?(service_provider_name, service_name)
+      @service_providers.each do |service_provider|
+        if(service_provider.get_name == service_provider_name)
+          service_provider.get_services.each do |service|
+            if(service.get_name == service_name)
               return true
             end
           end
@@ -218,47 +218,47 @@ class Organization
       return false
     end
 
-    def getServiceByName(serviceName)
+    def get_service_by_name(service_name)
       @services.each do |service|
-        if(service.get_name == serviceName)
+        if(service.get_name == service_name)
           return service
         end
       end
       return nil
     end
 
-    def getServiceProviderByName(serviceProviderName)
-      @service_providers.each do |serviceProvider|
-        if(serviceProvider.get_name == serviceProviderName)
-          return serviceProvider
+    def get_service_provider_by_name(service_provider_name)
+      @service_providers.each do |service_provider|
+        if(service_provider.get_name == service_provider_name)
+          return service_provider
         end
       end
       return nil
     end
 
-    def getRecurringResponse()
+    def get_recurring_response()
       prompt = TTY::Prompt.new
-      isRecurringResponse = prompt.ask("Appointment recurs weekly? (y/n): ")
+      is_recurring_response = prompt.ask("Appointment recurs weekly? (y/n): ")
 
-      while(isRecurringResponse != 'y' && isRecurringResponse != 'n')
+      while(is_recurring_response != 'y' && is_recurring_response != 'n')
         puts "Invalid response (must enter 'y' or 'n')"
-        isRecurringResponse = prompt.ask("Appointment recurs weekly? (y/n): ")
+        is_recurring_response = prompt.ask("Appointment recurs weekly? (y/n): ")
       end
 
-      return isRecurringResponse == 'y'
+      return is_recurring_response == 'y'
     end
 
-    def getTimeResponse()
+    def get_time_response()
       prompt = TTY::Prompt.new
-      timeString = prompt.ask("Time of appointment (ex. '14:45'): ")
-      timeStringArray = timeString.split(':')
+      time_string = prompt.ask("Time of appointment (ex. '14:45'): ")
+      time_string_array = time_string.split(':')
 
-      if(timeStringArray.length != 2)
+      if(time_string_array.length != 2)
         return nil, nil
       end
 
-      hour = timeStringArray[0].to_i
-      minute = timeStringArray[1].to_i
+      hour = time_string_array[0].to_i
+      minute = time_string_array[1].to_i
 
       if(hour < 0 || hour > 23)
         hour = nil
