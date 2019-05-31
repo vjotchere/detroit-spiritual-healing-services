@@ -38,7 +38,7 @@ class Organization
         service_to_delete_name = prompt.ask("Name of service to delete: ")
 
         @services.each do |existing_service|
-          if(existing_service.get_name() == service_to_delete_name)
+          if(existing_service.name == service_to_delete_name)
             @services.delete(existing_service)
             puts "The #{service_to_delete_name} service has been deleted"
             return
@@ -55,7 +55,7 @@ class Organization
             puts "The offered services are:\n"
             i = 0
             while i < @services.length
-                service_name = @services[i].get_name
+                service_name = @services[i].name
                 puts "\t#{service_name}"
                 i += 1
             end
@@ -83,7 +83,7 @@ class Organization
         end
 
         @services.each do |service|
-          if(service.get_name == service_name)
+          if(service.name == service_name)
             available_services.push(service)
             break
           end
@@ -98,7 +98,7 @@ class Organization
       prompt = TTY::Prompt.new
       service_provider_name = prompt.ask("Name of the service provider to delete: ")
       @service_providers.each do |provider|
-        if(provider.get_name == service_provider_name)
+        if(provider.name == service_provider_name)
           @service_providers.delete(provider)
           puts "Service Provider #{service_provider_name} has been deleted"
           return
@@ -114,7 +114,7 @@ class Organization
           puts "The service providers are:\n"
           i = 0
           while i < @service_providers.length
-              service_provider_name = @service_providers[i].get_name
+              service_provider_name = @service_providers[i].name
               puts "\t#{service_provider_name}"
               i += 1
           end
@@ -159,7 +159,7 @@ class Organization
       is_recurring = get_recurring_response()
       client = prompt.ask("Client name: ")
 
-      if(service_provider.timeslot_is_available?(appointment_time, service.get_duration(), is_recurring))
+      if(service_provider.timeslot_is_available?(appointment_time, service.duration, is_recurring))
         appt = Appointment.new(appointment_time, service, client, is_recurring)
         service_provider.add_appt(appt)
         puts "appointment added successfully"
@@ -188,7 +188,7 @@ class Organization
 
     def service_already_exists?(new_service_name)
       @services.each do |existing_service|
-        if(existing_service.get_name() == new_service_name)
+        if(existing_service.name == new_service_name)
           return true
         end
       end
@@ -197,7 +197,7 @@ class Organization
 
     def service_provider_already_exists?(new_service_provider_name)
       @service_providers.each do |existing_service_provider|
-        if(existing_service_provider.get_name == new_service_provider_name)
+        if(existing_service_provider.name == new_service_provider_name)
           return true
         end
       end
@@ -206,9 +206,9 @@ class Organization
 
     def service_provider_provides_service?(service_provider_name, service_name)
       @service_providers.each do |service_provider|
-        if(service_provider.get_name == service_provider_name)
-          service_provider.get_services.each do |service|
-            if(service.get_name == service_name)
+        if(service_provider.name == service_provider_name)
+          service_provider.services.each do |service|
+            if(service.name == service_name)
               return true
             end
           end
@@ -220,7 +220,7 @@ class Organization
 
     def get_service_by_name(service_name)
       @services.each do |service|
-        if(service.get_name == service_name)
+        if(service.name == service_name)
           return service
         end
       end
@@ -229,7 +229,7 @@ class Organization
 
     def get_service_provider_by_name(service_provider_name)
       @service_providers.each do |service_provider|
-        if(service_provider.get_name == service_provider_name)
+        if(service_provider.name == service_provider_name)
           return service_provider
         end
       end
@@ -271,4 +271,3 @@ class Organization
       return hour, minute
     end
 end
-
