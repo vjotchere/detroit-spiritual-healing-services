@@ -12,7 +12,10 @@ org = Organization.new(prompt)
 
 services = []
 
-response = prompt.select("Choose a command...", org.list_commands())
+response = (prompt.select("Choose a command...", org.list_commands())).to_s()
+
+puts response.class
+puts response
 
 while (response != "close".downcase)
     case response.downcase
@@ -41,5 +44,5 @@ while (response != "close".downcase)
         org.list_commands()
     end
 
-    response = prompt.select("Choose a command...")
+    response = prompt.select("Choose a command...", org.list_commands())
 end
