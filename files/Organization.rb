@@ -35,7 +35,7 @@ class Organization
         service_name = prompt.ask("Name of the service: ")
 
         if(service_already_exists?(service_name))
-          puts "Service Already Exists"
+          puts "Error: Service Already Exists"
           return
         end
 
@@ -101,16 +101,11 @@ class Organization
         i += 1
       end
 
-      available_service_names = prompt.multi_select("Which services can #{service_provider_name} do?:", service_choices)
+      available_service_names = prompt.multi_select("Which services can #{service_provider_name} provide?:", service_choices)
       available_service_names_array = available_service_names
       available_services = Array.new
 
       available_service_names_array.each do |service_name|
-        if(!service_already_exists?(service_name))
-          puts "#{service_name} does not exist"
-          return
-        end
-
         @services.each do |service|
           if(service.name == service_name)
             available_services.push(service)
@@ -119,8 +114,12 @@ class Organization
         end
       end
 
-      @service_providers.push(ServiceProvider.new(service_provider_name, service_provider_number, available_services))
-      puts "The #{service_provider_name} service provider has been created!"
+      if (available_services.length > 0)
+        @service_providers.push(ServiceProvider.new(service_provider_name, service_provider_number, available_services))
+        puts "The #{service_provider_name} service provider has been created!"
+      else
+        puts "Error: A service provider must provide at least one service."
+      end
     end
 
     def remove_service_provider()
@@ -141,7 +140,7 @@ class Organization
           return
         end
       end
-      puts "Service provider does not exist"
+      puts "Error: Service provider does not exist"
     end
 
     def list_service_providers()
@@ -178,15 +177,15 @@ class Organization
       end
 
       if(!service_provider_provides_service?(service_provider_name, service_name))
-        puts "#{service_provider_name} does not provide #{service_name}"
+        puts "Error: #{service_provider_name} does not provide #{service_name}"
         return
       end
 
-      day, month, year = get_date_response()
+      day, month, year = get_date_response(true)
       start_hour, start_minute = get_time_response()
 
       if(start_hour == nil || start_minute == nil)
-        puts "Invalid Time"
+        puts "Error: Invalid Time"
         return
       end
 
@@ -199,7 +198,7 @@ class Organization
         service_provider.add_appt(appt)
         puts "Appointment added successfully"
       else
-        puts "Can't add a new appointment to that time"
+        puts "Error: Can't add a new appointment to that time"
       end
     end
 
@@ -209,7 +208,7 @@ class Organization
       service_provider = get_service_provider_by_name(service_provider_name)
 
       if(service_provider == nil)
-        puts "Service provider does not exist"
+        puts "Error: Service provider does not exist"
         return
       end
 
@@ -228,7 +227,7 @@ class Organization
         return
       end
 
-      day, month, year = get_date_response()
+      day, month, year = get_date_response(false)
       time = Time.new(year, month, day)
 
       service_provider.appointments.each do |appointment|
@@ -250,15 +249,15 @@ class Organization
       service_provider = get_service_provider_by_name(service_provider_name)
 
       if(service_provider == nil)
-        puts "Service provider does not exist"
+        puts "Error: Service provider does not exist"
         return
       end
 
-      day, month, year = get_date_response()
+      day, month, year = get_date_response(true)
       start_hour, start_minute = get_time_response()
 
       if(start_hour == nil || start_minute == nil)
-        puts "Invalid Time"
+        puts "Error: Invalid Time"
         return
       end
 
@@ -336,18 +335,24 @@ class Organization
       is_recurring_response = prompt.ask("Appointment recurs weekly? (y/n): ")
 
       while(is_recurring_response != 'y' && is_recurring_response != 'n')
-        puts "Invalid response (must enter 'y' or 'n')"
+        puts "Error: Invalid response (must enter 'y' or 'n')"
         is_recurring_response = prompt.ask("Appointment recurs weekly? (y/n): ")
       end
 
       return is_recurring_response == 'y'
     end
 
-    def get_date_response()
+    def get_date_response(view_sched)
       prompt = TTY::Prompt.new
-      month = prompt.ask("Month of appointment: ")
-      day = prompt.ask("Date of appointment: ")
-      year = prompt.ask("Year of appointment: ")
+      if (!view_sched)
+        month = prompt.ask("Month of appointment: ")
+        day = prompt.ask("Date of appointment: ")
+        year = prompt.ask("Year of appointment: ")
+      else
+        month = prompt.ask("Month: ")
+        day = prompt.ask("Date: ")
+        year = prompt.ask("Year: ")
+      end
       return day, month, year
     end
 
