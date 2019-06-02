@@ -9,6 +9,6 @@ class Appointment
     end
 
     def output_appointment
-      puts "#{@time.inspect} #{@service.name} #{@client} #{@is_recurring}"
+      puts "Date/Time/Timezone: #{@time.inspect}  | Service: #{@service.name} | Client: #{@client} | Weekly: #{@is_recurring}"
     end
 end
