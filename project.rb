@@ -7,7 +7,7 @@ require_relative "files/ServiceProvider"
 require_relative "files/AvailabilityBlock"
 
 
-prompt = TTY::Prompt.new
+prompt = TTY::Prompt.new(active_color: :cyan)
 org = Organization.new(prompt)
 
 commands = ["Add service", "Add service provider", "Remove service", "Remove service provider", 
