@@ -23,6 +23,7 @@ class Organization
         puts "New organization created!"
         @name = prompt.ask("Enter the name of the organization: ")
         puts "\nThe #{@name} organization has been created!\n"
+
         line_break()
     end
 
@@ -32,6 +33,7 @@ class Organization
 
         if(service_already_exists?(service_name))
           puts "Error: Service Already Exists"
+          line_break()
           return
         end
 
@@ -40,6 +42,7 @@ class Organization
 
         @services.push(Service.new(service_name, service_price, service_duration))
         puts "The #{service_name} service has been created!"
+        line_break()
     end
 
     def remove_service()
@@ -57,11 +60,13 @@ class Organization
           if(existing_service.name == service_to_delete)
             @services.delete(existing_service)
             puts "The #{service_to_delete} service has been deleted"
+            line_break()
             return
           end
         end
 
         puts "The #{@service_to_delete} service does not exist!"
+        line_break()
     end
 
     def list_services()
@@ -76,6 +81,8 @@ class Organization
                 i += 1
             end
         end
+
+        line_break()
     end
 
     def add_service_provider()
@@ -84,6 +91,7 @@ class Organization
 
       if(service_provider_already_exists?(service_provider_name))
         puts "Service Provider already exists"
+        line_break()
         return
       end
 
@@ -108,6 +116,7 @@ class Organization
       else
         puts "Error: A service provider must provide at least one service."
       end
+      line_break()
     end
 
     def remove_service_provider()
@@ -125,10 +134,12 @@ class Organization
         if(provider.name == provider_to_delete)
           @service_providers.delete(provider)
           puts "Service Provider #{provider_to_delete} has been deleted"
+          line_break()
           return
         end
       end
       puts "Error: Service provider does not exist"
+      line_break()
     end
 
     def list_service_providers()
@@ -143,6 +154,7 @@ class Organization
               i += 1
           end
       end
+    line_break()
     end
 
     def schedule_appointment()
@@ -156,6 +168,7 @@ class Organization
 
       if(!service_provider_provides_service?(service_provider_name, service_name))
         puts "Error: #{service_provider_name} does not provide #{service_name}"
+        line_break()
         return
       end
 
@@ -164,6 +177,7 @@ class Organization
 
       if(start_hour == nil || start_minute == nil)
         puts "Error: Invalid Time"
+        line_break()
         return
       end
 
@@ -178,6 +192,7 @@ class Organization
       else
         puts "Error: Can't add a new appointment to that time"
       end
+      line_break()
     end
 
     def list_appointments()
@@ -187,6 +202,7 @@ class Organization
 
       if(service_provider == nil)
         puts "Error: Service provider does not exist"
+        line_break()
         return
       end
 
@@ -202,6 +218,7 @@ class Organization
 
       if(service_provider == nil)
         puts "Service provider does not exist"
+        line_break()
         return
       end
 
@@ -219,6 +236,7 @@ class Organization
           end
         end
       end
+      line_break()
     end
 
     def schedule_availability_block()
@@ -228,6 +246,7 @@ class Organization
 
       if(service_provider == nil)
         puts "Error: Service provider does not exist"
+        line_break()
         return
       end
 
@@ -236,6 +255,7 @@ class Organization
 
       if(start_hour == nil || start_minute == nil)
         puts "Error: Invalid Time"
+        line_break()
         return
       end
 
@@ -245,6 +265,7 @@ class Organization
 
       new_block = AvailabilityBlock.new(block_time, block_duration, is_recurring)
       service_provider.add_availability_block(new_block)
+      line_break()
     end
 
     def list_commands()
