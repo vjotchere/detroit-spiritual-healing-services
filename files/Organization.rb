@@ -272,10 +272,10 @@ class Organization
 
     def list_commands()
       # puts ("\n")
-      # puts (Organization.public_instance_methods - Object.public_instance_methods).sort.join("\n")
+      # puts ((Organization.public_instance_methods - Object.public_instance_methods).sort).class
       # puts ("\n")
 
-      return (Organization.public_instance_methods - Object.public_instance_methods).sort.join("\n")
+      return ((Organization.public_instance_methods - Object.public_instance_methods).sort)
 
     end
 
