@@ -10,7 +10,10 @@ require_relative "files/AvailabilityBlock"
 prompt = TTY::Prompt.new
 org = Organization.new(prompt)
 
-response = prompt.ask("Enter a command (use 'close' to exit): ")
+services = []
+
+response = prompt.select("Choose a command...", org.list_commands())
+
 while (response != "close".downcase)
     case response.downcase
     when "add_service"
@@ -38,5 +41,5 @@ while (response != "close".downcase)
         org.list_commands()
     end
 
-    response = prompt.ask("Enter a command (use 'close' to exit): ")
+    response = prompt.select("Choose a command...")
 end
