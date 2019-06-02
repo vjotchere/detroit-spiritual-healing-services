@@ -59,21 +59,21 @@ class Organization
         @services.each do |existing_service|
           if(existing_service.name == service_to_delete)
             @services.delete(existing_service)
-            puts "The #{service_to_delete} service has been deleted"
+            puts "\nThe #{service_to_delete} service has been deleted"
             line_break()
             return
           end
         end
 
-        puts "The #{@service_to_delete} service does not exist!"
+        puts "\nThe #{@service_to_delete} service does not exist!"
         line_break()
     end
 
     def list_services()
         if @services.length < 1
-            puts "Currently no services are offered"
+            puts "\nCurrently no services are offered"
         else
-            puts "The offered services are:\n"
+            puts "\nThe offered services are:\n"
             i = 0
             while i < @services.length
                 service_name = @services[i].name
@@ -90,7 +90,7 @@ class Organization
       service_provider_name = prompt.ask("Name of the service provider: ")
 
       if(service_provider_already_exists?(service_provider_name))
-        puts "Service Provider already exists"
+        puts "\nService Provider already exists"
         line_break()
         return
       end
@@ -112,9 +112,9 @@ class Organization
 
       if (available_services.length > 0)
         @service_providers.push(ServiceProvider.new(service_provider_name, service_provider_number, available_services))
-        puts "The #{service_provider_name} service provider has been created!"
+        puts "\nThe #{service_provider_name} service provider has been created!"
       else
-        puts "Error: A service provider must provide at least one service."
+        puts "\nError: A service provider must provide at least one service."
       end
       line_break()
     end
@@ -133,20 +133,20 @@ class Organization
       @service_providers.each do |provider|
         if(provider.name == provider_to_delete)
           @service_providers.delete(provider)
-          puts "Service Provider #{provider_to_delete} has been deleted"
+          puts "\nService Provider #{provider_to_delete} has been deleted"
           line_break()
           return
         end
       end
-      puts "Error: Service provider does not exist"
+      puts "\nError: Service provider does not exist"
       line_break()
     end
 
     def list_service_providers()
       if @service_providers.length < 1
-          puts "Currently no service providers"
+          puts "\nCurrently no service providers"
       else
-          puts "The service providers are:\n"
+          puts "\nThe service providers are:\n"
           i = 0
           while i < @service_providers.length
               service_provider_name = @service_providers[i].name
@@ -167,7 +167,7 @@ class Organization
       service = get_service_by_name(service_name)
 
       if(!service_provider_provides_service?(service_provider_name, service_name))
-        puts "Error: #{service_provider_name} does not provide #{service_name}"
+        puts "\nError: #{service_provider_name} does not provide #{service_name}"
         line_break()
         return
       end
@@ -176,7 +176,7 @@ class Organization
       start_hour, start_minute = get_time_response(true)
 
       if(start_hour == nil || start_minute == nil)
-        puts "Error: Invalid Time"
+        puts "\nError: Invalid Time"
         line_break()
         return
       end
@@ -188,9 +188,9 @@ class Organization
       if(service_provider.timeslot_is_available?(appointment_time, service.duration, is_recurring))
         appt = Appointment.new(appointment_time, service, client, is_recurring)
         service_provider.add_appt(appt)
-        puts "Appointment added successfully"
+        puts "\nAppointment added successfully"
       else
-        puts "Error: Can't add a new appointment to that time"
+        puts "\nError: Can't add a new appointment to that time"
       end
       line_break()
     end
@@ -201,7 +201,7 @@ class Organization
       service_provider = get_service_provider_by_name(service_provider_name)
 
       if(service_provider == nil)
-        puts "Error: Service provider does not exist"
+        puts "\nError: Service provider does not exist"
         line_break()
         return
       end
@@ -217,7 +217,7 @@ class Organization
       service_provider = get_service_provider_by_name(service_provider_name)
 
       if(service_provider == nil)
-        puts "Service provider does not exist"
+        puts "\nService provider does not exist"
         line_break()
         return
       end
@@ -245,7 +245,7 @@ class Organization
       service_provider = get_service_provider_by_name(service_provider_name)
 
       if(service_provider == nil)
-        puts "Error: Service provider does not exist"
+        puts "\nError: Service provider does not exist"
         line_break()
         return
       end
@@ -254,7 +254,7 @@ class Organization
       start_hour, start_minute = get_time_response(false)
 
       if(start_hour == nil || start_minute == nil)
-        puts "Error: Invalid Time"
+        puts "\nError: Invalid Time"
         line_break()
         return
       end
