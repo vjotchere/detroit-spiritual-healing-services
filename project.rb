@@ -34,7 +34,7 @@ while (response != "close".downcase)
     when "view_schedule"
         org.view_schedule()
     else
-        puts "\nInvalid command!\n"
+        puts "Error: \nInvalid command!\n"
         org.list_commands()
     end
 
