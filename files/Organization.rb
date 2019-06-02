@@ -39,7 +39,7 @@ class Organization
           return
         end
 
-        service_price = prompt.ask("Price of the service: ")
+        service_price = prompt.ask("Price of the service (ex. '3.00'): ")
         service_duration = prompt.ask("Duration of the service (in hours): ")
 
         @services.push(Service.new(service_name, service_price, service_duration))
@@ -80,18 +80,6 @@ class Organization
                 i += 1
             end
         end
-    end
-
-    def get_service_choices()
-      service_choices = Array.new
-
-      i = 0
-      while i < @services.length
-        service_choices.push(@services[i].name)
-        i += 1
-      end
-
-      return service_choices
     end
 
     def add_service_provider()
@@ -135,7 +123,7 @@ class Organization
         providers.push(provider.name)
       end
       
-      provider_to_delete = prompt.select("Choose which service provider to delete...", providers)
+      provider_to_delete = prompt.select("Choose which service provider to delete:", providers)
 
       @service_providers.each do |provider|
         if(provider.name == provider_to_delete)
@@ -164,14 +152,7 @@ class Organization
     def schedule_appointment()
       prompt = TTY::Prompt.new
 
-      available_service_providers = Array.new
-      i = 0
-      while i < @service_providers.length
-        available_service_providers.push(@service_providers[i].name)
-        i += 1
-      end
-
-      service_provider_name = prompt.select("Choose a service provider:", available_service_providers)
+      service_provider_name = prompt.select("Choose a service provider:", get_service_providers_array())
       service_provider = get_service_provider_by_name(service_provider_name)
 
       service_name = prompt.select("Choose a service:", get_service_choices())
@@ -205,7 +186,7 @@ class Organization
 
     def list_appointments()
       prompt = TTY::Prompt.new
-      service_provider_name = prompt.ask("Name of the service provider: ")
+      service_provider_name = prompt.select("Choose a service provider:", get_service_providers_array())
       service_provider = get_service_provider_by_name(service_provider_name)
 
       if(service_provider == nil)
@@ -220,7 +201,7 @@ class Organization
 
     def view_schedule()
       prompt = TTY::Prompt.new
-      service_provider_name = prompt.ask("Name of the service provider: ")
+      service_provider_name = prompt.select("Choose a service provider:", get_service_providers_array)
       service_provider = get_service_provider_by_name(service_provider_name)
 
       if(service_provider == nil)
@@ -280,6 +261,28 @@ class Organization
     end
 
     private
+
+    def get_service_choices()
+      service_choices = Array.new
+
+      i = 0
+      while i < @services.length
+        service_choices.push(@services[i].name)
+        i += 1
+      end
+
+      return service_choices
+    end
+
+    def get_service_providers_array()
+      available_service_providers = Array.new
+      i = 0
+      while i < @service_providers.length
+        available_service_providers.push(@service_providers[i].name)
+        i += 1
+      end
+      return available_service_providers
+    end
 
     def service_already_exists?(new_service_name)
       @services.each do |existing_service|
