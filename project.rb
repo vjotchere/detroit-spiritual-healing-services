@@ -10,36 +10,39 @@ require_relative "files/AvailabilityBlock"
 prompt = TTY::Prompt.new
 org = Organization.new(prompt)
 
-services = []
+commands = ["Add service", "Add service provider", "Remove service", "Remove service provider", 
+"List services", "List service providers", "Schedule appointment", "List appointments", 
+"Schedule time off", "View schedule"]
 
-response = (prompt.select("Choose a command...", org.list_commands())).to_s()
+# response = (prompt.select("Choose a command...", org.list_commands())).to_s()
+response = (prompt.select("Choose a command...", commands)).to_s()
 
-while (response != "close".downcase)
-    case response.downcase
-    when "add_service"
+while (response != "close")
+    case response
+    when "Add service"
         org.add_service()
-    when "remove_service"
+    when "Remove service"
         org.remove_service()
-    when "list_services"
+    when "List services"
         org.list_services()
-    when "add_service_provider"
+    when "Add service provider"
         org.add_service_provider()
-    when "remove_service_provider"
+    when "Remove service provider"
         org.remove_service_provider()
-    when "list_service_providers"
+    when "List service providers"
         org.list_service_providers()
-    when "schedule_appointment"
+    when "Schedule appointment"
         org.schedule_appointment()
-    when "list_appointments"
+    when "List appointments"
         org.list_appointments()
-    when "schedule_availability_block"
+    when "Schedule time off"
         org.schedule_availability_block()
-    when "view_schedule"
+    when "View schedule"
         org.view_schedule()
     else
         puts "Error: \nInvalid command!\n"
         org.list_commands()
     end
 
-    response = (prompt.select("Choose a command...", org.list_commands())).to_s()
+    response = (prompt.select("Choose a command...", commands)).to_s()
 end

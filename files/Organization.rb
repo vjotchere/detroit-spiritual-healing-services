@@ -20,14 +20,7 @@ class Organization
         service_provider.add_appt(appt)
 
         @name = prompt.ask("Name of the organization: ")
-        # @name = name
         puts "\nThe #{@name} organization has been created!\n"
-
-        # list_commands()
-    end
-
-    def services
-      @services
     end
 
     def add_service()
@@ -252,9 +245,6 @@ class Organization
     end
 
     def list_commands()
-      # puts ("\n")
-      # puts ((Organization.public_instance_methods - Object.public_instance_methods).sort).class
-      # puts ("\n")
 
       return ((Organization.public_instance_methods - Object.public_instance_methods).sort)
 
