@@ -20,7 +20,7 @@ class Organization
         appt = Appointment.new(time, service, 'me', true)
         service_provider.add_appt(appt)
 
-        puts "New organization created!"
+        puts "\nNew organization created!"
         @name = prompt.ask("Enter the name of the organization: ")
         puts "\nThe #{@name} organization has been created!\n"
 
