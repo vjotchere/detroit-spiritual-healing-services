@@ -242,13 +242,13 @@ class Organization
       service_provider.add_availability_block(new_block)
     end
 
-    private
-
     def list_commands()
-        puts ("\n")
-        puts (Organization.public_instance_methods - Object.public_instance_methods).sort.join("\n")
-        puts ("\n")
+      puts ("\n")
+      puts (Organization.public_instance_methods - Object.public_instance_methods).sort.join("\n")
+      puts ("\n")
     end
+
+    private
 
     def service_already_exists?(new_service_name)
       @services.each do |existing_service|
