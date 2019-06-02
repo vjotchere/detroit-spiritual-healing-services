@@ -45,6 +45,10 @@ class ServiceProvider
       return true
     end
 
+    def name
+      @name
+    end
+
     private
 
     def overlaps_with_any_existing_appointment?(new_time, new_duration, is_recurring)

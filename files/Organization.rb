@@ -105,11 +105,21 @@ class Organization
 
     def remove_service_provider()
       prompt = TTY::Prompt.new
-      service_provider_name = prompt.ask("Name of the service provider to delete: ")
+
+      providers = []
+
       @service_providers.each do |provider|
-        if(provider.name == service_provider_name)
+        providers.push(provider.name)
+      end
+      
+      
+      provider_to_delete = prompt.select("Choose which service provider to delete...", providers)
+
+
+      @service_providers.each do |provider|
+        if(provider.name == provider_to_delete)
           @service_providers.delete(provider)
-          puts "Service Provider #{service_provider_name} has been deleted"
+          puts "Service Provider #{provider_to_delete} has been deleted"
           return
         end
       end
