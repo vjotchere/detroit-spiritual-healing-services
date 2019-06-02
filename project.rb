@@ -4,6 +4,7 @@ require_relative "files/DateTime"
 require_relative "files/Organization"
 require_relative "files/Service"
 require_relative "files/ServiceProvider"
+require_relative "files/AvailabilityBlock"
 
 
 prompt = TTY::Prompt.new
@@ -28,6 +29,8 @@ while (response != "close".downcase)
         org.schedule_appointment()
     when "list_appointments"
         org.list_appointments()
+    when "schedule_availability_block"
+        org.schedule_availability_block()
     when "view_schedule"
         org.view_schedule()
     else

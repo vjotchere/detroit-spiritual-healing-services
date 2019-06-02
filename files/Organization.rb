@@ -154,9 +154,7 @@ class Organization
         return
       end
 
-      day = prompt.ask("Date of appointment: ")
-      month = prompt.ask("Month of appointment: ")
-      year = prompt.ask("Year of appointment: ")
+      day, month, year = get_date_response()
       start_hour, start_minute = get_time_response()
 
       if(start_hour == nil || start_minute == nil)
@@ -171,9 +169,9 @@ class Organization
       if(service_provider.timeslot_is_available?(appointment_time, service.duration, is_recurring))
         appt = Appointment.new(appointment_time, service, client, is_recurring)
         service_provider.add_appt(appt)
-        puts "appointment added successfully"
+        puts "Appointment added successfully"
       else
-        puts "cant add to that time"
+        puts "Can't add a new appointment to that time"
       end
     end
 
@@ -202,10 +200,7 @@ class Organization
         return
       end
 
-      day = prompt.ask("Date of appointment: ")
-      month = prompt.ask("Month of appointment: ")
-      year = prompt.ask("Year of appointment: ")
-
+      day, month, year = get_date_response()
       time = Time.new(year, month, day)
 
       service_provider.appointments.each do |appointment|
@@ -214,11 +209,37 @@ class Organization
             appointment.output_appointment
           end
         else
-          if(ServiceProvider.is_same_date?(time, appointment.time))
+          if(is_same_date?(time, appointment.time))
             appointment.output_appointment
           end
         end
       end
+    end
+
+    def schedule_availability_block()
+      prompt = TTY::Prompt.new
+      service_provider_name = prompt.ask("Name of the service provider: ")
+      service_provider = get_service_provider_by_name(service_provider_name)
+
+      if(service_provider == nil)
+        puts "Service provider does not exist"
+        return
+      end
+
+      day, month, year = get_date_response()
+      start_hour, start_minute = get_time_response()
+
+      if(start_hour == nil || start_minute == nil)
+        puts "Invalid Time"
+        return
+      end
+
+      block_time = Time.new(year, month, day, start_hour, start_minute)
+      block_duration = prompt.ask("Duration of the block (in hours): ")
+      is_recurring = get_recurring_response()
+
+      new_block = AvailabilityBlock.new(block_time, block_duration, is_recurring)
+      service_provider.add_availability_block(new_block)
     end
 
     private
@@ -291,6 +312,14 @@ class Organization
       return is_recurring_response == 'y'
     end
 
+    def get_date_response()
+      prompt = TTY::Prompt.new
+      month = prompt.ask("Month of appointment: ")
+      day = prompt.ask("Date of appointment: ")
+      year = prompt.ask("Year of appointment: ")
+      return day, month, year
+    end
+
     def get_time_response()
       prompt = TTY::Prompt.new
       time_string = prompt.ask("Time of appointment (ex. '14:45'): ")
@@ -312,5 +341,9 @@ class Organization
       end
 
       return hour, minute
+    end
+
+    def is_same_date?(time_1, time_2)
+      return (time_1.day == time_2.day && time_1.month == time_2.month && time_1.year == time_2.year)
     end
 end
