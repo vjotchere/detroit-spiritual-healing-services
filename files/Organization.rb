@@ -82,6 +82,18 @@ class Organization
         end
     end
 
+    def get_service_choices()
+      service_choices = Array.new
+
+      i = 0
+      while i < @services.length
+        service_choices.push(@services[i].name)
+        i += 1
+      end
+
+      return service_choices
+    end
+
     def add_service_provider()
       prompt = TTY::Prompt.new
       service_provider_name = prompt.ask("Name of the service provider: ")
@@ -92,16 +104,8 @@ class Organization
       end
 
       service_provider_number = prompt.ask("Service provider phone number: ")
-      
-      service_choices = Array.new
 
-      i = 0
-      while i < @services.length
-        service_choices.push(@services[i].name)
-        i += 1
-      end
-
-      available_service_names = prompt.multi_select("Which services can #{service_provider_name} provide?:", service_choices)
+      available_service_names = prompt.multi_select("Which services can #{service_provider_name} provide?:", get_service_choices())
       available_service_names_array = available_service_names
       available_services = Array.new
 
@@ -160,21 +164,18 @@ class Organization
     def schedule_appointment()
       prompt = TTY::Prompt.new
 
-      service_provider_name = prompt.ask("Name of the service provider: ")
+      available_service_providers = Array.new
+      i = 0
+      while i < @service_providers.length
+        available_service_providers.push(@service_providers[i].name)
+        i += 1
+      end
+
+      service_provider_name = prompt.select("Choose a service provider:", available_service_providers)
       service_provider = get_service_provider_by_name(service_provider_name)
 
-      if(service_provider == nil)
-        puts "Service provider does not exist"
-        return
-      end
-
-      service_name = prompt.ask("Name of the service: ")
+      service_name = prompt.select("Choose a service:", get_service_choices())
       service = get_service_by_name(service_name)
-
-      if(service == nil)
-        puts "Service does not exist"
-        return
-      end
 
       if(!service_provider_provides_service?(service_provider_name, service_name))
         puts "Error: #{service_provider_name} does not provide #{service_name}"
@@ -345,11 +346,11 @@ class Organization
     def get_date_response(view_sched)
       prompt = TTY::Prompt.new
       if (!view_sched)
-        month = prompt.ask("Month of appointment: ")
+        month = prompt.ask("Month of appointment (ex. '4'): ")
         day = prompt.ask("Date of appointment: ")
         year = prompt.ask("Year of appointment: ")
       else
-        month = prompt.ask("Month: ")
+        month = prompt.ask("Month (ex. '4'): ")
         day = prompt.ask("Date: ")
         year = prompt.ask("Year: ")
       end
