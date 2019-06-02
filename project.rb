@@ -15,7 +15,7 @@ commands = ["Add service", "Add service provider", "Remove service", "Remove ser
 "Schedule time off", "View schedule"]
 
 # response = (prompt.select("Choose a command...", org.list_commands())).to_s()
-response = (prompt.select("Choose a command...", commands)).to_s()
+response = (prompt.select("Choose a command...", commands, per_page: 10)).to_s()
 
 while (response != "close")
     case response
@@ -44,5 +44,5 @@ while (response != "close")
         org.list_commands()
     end
 
-    response = (prompt.select("Choose a command...", commands)).to_s()
+    response = (prompt.select("Choose a command...", commands, per_page: 10)).to_s()
 end
