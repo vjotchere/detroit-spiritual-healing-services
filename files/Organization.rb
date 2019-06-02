@@ -10,9 +10,9 @@ class Organization
         @services = Array.new
         @service_providers = Array.new
 
-        service = Service.new('1', 10, 1)
+        service = Service.new
         @services.push(service)
-        service_provider = ServiceProvider.new('1', 1, [service])
+        service_provider = ServiceProvider.new
         @service_providers.push(service_provider)
 
         time = Time.new(2019, 1, 1, 13, 30)
