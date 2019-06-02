@@ -88,8 +88,17 @@ class Organization
       end
 
       service_provider_number = prompt.ask("Service provider phone number: ")
-      available_service_names_string = prompt.ask("List of available services (separated by ','): ")
-      available_service_names_array = available_service_names_string.split(', ')
+      
+      service_choices = Array.new
+
+      i = 0
+      while i < @services.length
+        service_choices.push(@services[i].name)
+        i += 1
+      end
+
+      available_service_names = prompt.multi_select("Which services can #{service_provider_name} do?:", service_choices)
+      available_service_names_array = available_service_names
       available_services = Array.new
 
       available_service_names_array.each do |service_name|
