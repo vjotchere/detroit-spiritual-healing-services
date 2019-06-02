@@ -23,7 +23,11 @@ class Organization
         # @name = name
         puts "\nThe #{@name} organization has been created!\n"
 
-        list_commands()
+        # list_commands()
+    end
+
+    def services
+      @services
     end
 
     def add_service()
@@ -266,9 +270,12 @@ class Organization
     end
 
     def list_commands()
-      puts ("\n")
-      puts (Organization.public_instance_methods - Object.public_instance_methods).sort.join("\n")
-      puts ("\n")
+      # puts ("\n")
+      # puts (Organization.public_instance_methods - Object.public_instance_methods).sort.join("\n")
+      # puts ("\n")
+
+      return (Organization.public_instance_methods - Object.public_instance_methods).sort.join("\n")
+
     end
 
     private
