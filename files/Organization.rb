@@ -44,17 +44,24 @@ class Organization
 
     def remove_service()
         prompt = TTY::Prompt.new
-        service_to_delete_name = prompt.ask("Name of service to delete: ")
+
+        service_names = []
+
+        @services.each do |service|
+          service_names.push(service.name)
+        end
+
+        service_to_delete = prompt.select("Choose the service to delete...", service_names)
 
         @services.each do |existing_service|
-          if(existing_service.name == service_to_delete_name)
+          if(existing_service.name == service_to_delete)
             @services.delete(existing_service)
-            puts "The #{service_to_delete_name} service has been deleted"
+            puts "The #{service_to_delete} service has been deleted"
             return
           end
         end
 
-        puts "The #{@service_to_delete_name} service does not exist!"
+        puts "The #{@service_to_delete} service does not exist!"
     end
 
     def list_services()
@@ -114,11 +121,19 @@ class Organization
 
     def remove_service_provider()
       prompt = TTY::Prompt.new
-      service_provider_name = prompt.ask("Name of the service provider to delete: ")
+
+      providers = []
+
       @service_providers.each do |provider|
-        if(provider.name == service_provider_name)
+        providers.push(provider.name)
+      end
+      
+      provider_to_delete = prompt.select("Choose which service provider to delete...", providers)
+
+      @service_providers.each do |provider|
+        if(provider.name == provider_to_delete)
           @service_providers.delete(provider)
-          puts "Service Provider #{service_provider_name} has been deleted"
+          puts "Service Provider #{provider_to_delete} has been deleted"
           return
         end
       end
