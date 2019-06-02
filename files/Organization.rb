@@ -160,7 +160,7 @@ class Organization
       end
 
       day, month, year = get_date_response(true)
-      start_hour, start_minute = get_time_response()
+      start_hour, start_minute = get_time_response(true)
 
       if(start_hour == nil || start_minute == nil)
         puts "Error: Invalid Time"
@@ -223,7 +223,7 @@ class Organization
 
     def schedule_availability_block()
       prompt = TTY::Prompt.new
-      service_provider_name = prompt.ask("Name of the service provider: ")
+      service_provider_name = prompt.select("Choose a service provider:", get_service_providers_array)
       service_provider = get_service_provider_by_name(service_provider_name)
 
       if(service_provider == nil)
@@ -232,7 +232,7 @@ class Organization
       end
 
       day, month, year = get_date_response(true)
-      start_hour, start_minute = get_time_response()
+      start_hour, start_minute = get_time_response(false)
 
       if(start_hour == nil || start_minute == nil)
         puts "Error: Invalid Time"
@@ -353,9 +353,14 @@ class Organization
       return day, month, year
     end
 
-    def get_time_response()
+    def get_time_response(if_appt)
       prompt = TTY::Prompt.new
-      time_string = prompt.ask("Time of appointment (ex. '14:45'): ")
+      if (if_appt)
+        time_string = prompt.ask("Time of appointment (ex. '14:45'): ")
+      else
+        time_string = prompt.ask("Time off start time (ex. '14:45'): ")
+      end
+
       time_string_array = time_string.split(':')
 
       if(time_string_array.length != 2)
