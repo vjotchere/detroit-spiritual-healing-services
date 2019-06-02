@@ -321,11 +321,17 @@ class Organization
       return is_recurring_response == 'y'
     end
 
-    def get_date_response()
+    def get_date_response(view_sched)
       prompt = TTY::Prompt.new
-      month = prompt.ask("Month of appointment: ")
-      day = prompt.ask("Date of appointment: ")
-      year = prompt.ask("Year of appointment: ")
+      if (view_sched)
+        month = prompt.ask("Month of appointment: ")
+        day = prompt.ask("Date of appointment: ")
+        year = prompt.ask("Year of appointment: ")
+      else
+        month = prompt.ask("Month: ")
+        day = prompt.ask("Date: ")
+        year = prompt.ask("Year: ")
+      end
       return day, month, year
     end
 
