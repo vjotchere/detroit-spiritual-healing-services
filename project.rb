@@ -14,9 +14,6 @@ services = []
 
 response = (prompt.select("Choose a command...", org.list_commands())).to_s()
 
-puts response.class
-puts response
-
 while (response != "close".downcase)
     case response.downcase
     when "add_service"
