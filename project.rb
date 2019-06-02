@@ -41,5 +41,5 @@ while (response != "close".downcase)
         org.list_commands()
     end
 
-    response = prompt.select("Choose a command...", org.list_commands())
+    response = (prompt.select("Choose a command...", org.list_commands())).to_s()
 end
