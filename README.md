@@ -1,5 +1,7 @@
 # detroit-spiritual-healing-services
 
+A command line interface application that allows an organization/business to manage the schedules and appointments of it's employees and clients, respectively.
+
 ## Overview
 
 You run a software development agency. A client of yours, Detroit Spiritual Healing Services, has asked you to build an application to help manage its operations.
